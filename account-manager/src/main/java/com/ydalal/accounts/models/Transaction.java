@@ -1,12 +1,20 @@
 package com.ydalal.accounts.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
+    @JsonProperty("senderId")
     int senderId;
+    @JsonProperty("receiverId")
     int receiverId;
-    int amount;
+    @JsonProperty("transferAmount")
+    int transferAmount;
 }
