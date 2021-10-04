@@ -40,12 +40,12 @@ curl -v -X GET localhost:8000/account/transactions
 
 The customers.json is required. The accounts.json and transactions.json files can be updated to test different scenarios.
 
-####Extras:
+#### Extras:
 * Dependency injection using guice
 * Lombok to reduce boilerplate code
 * AssertJ for more english readable tests
 
-####Future improvements:
+#### Future improvements:
 * Rather than throwing an IOException, it would be good to give the user a descriptive message with the chance to correct their input.
 * FindBugs
 * Checkstyle
