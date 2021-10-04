@@ -1,18 +1,21 @@
 package com.ydalal.accounts.handlers;
 
 import com.google.inject.Inject;
-import com.ydalal.accounts.AccountIdGenerator;
 import com.ydalal.accounts.validators.Validator;
 import com.ydalal.accounts.db.AccountDAO;
 import com.ydalal.accounts.db.TransactionDAO;
 import com.ydalal.accounts.exceptions.AccountNotFoundException;
 import com.ydalal.accounts.exceptions.CustomerNotFoundException;
 import com.ydalal.accounts.exceptions.NotEnoughBalanceException;
-import com.ydalal.accounts.models.Account;
 import com.ydalal.accounts.models.Transaction;
 
+import java.io.IOException;
 import java.util.List;
 
+/**
+ * Handler class which contains the public facing APIs. Has dependencies on the Account and
+ * Transaction DAOs to fetch data.
+ */
 public class Handler {
 
     private final Validator validator;
@@ -28,22 +31,37 @@ public class Handler {
         this.transactionDAO = transactionDAO;
     }
 
+    /**
+     * Validates whether the customer exists, throws CustomerNotFoundException otherwise
+     * Creates account for input customerId if validation succeeds.
+     *
+     * @param customerId
+     * @param initialAmount
+     * @throws CustomerNotFoundException
+     * @throws IOException
+     */
     public void createAccount(final int customerId,
-                              final int initialAmount) throws CustomerNotFoundException {
+                              final int initialAmount) throws CustomerNotFoundException, IOException {
         validator.validateCustomerExists(customerId);
 
-        Account account = Account.builder()
-                .id(AccountIdGenerator.generate())
-                .customerId(customerId)
-                .amount(initialAmount)
-                .build();
-
-        accountDAO.createAccount(account);
+        accountDAO.createAccount(customerId, initialAmount);
     }
 
+    /**
+     * Validates whether the accounts exist, throws AccountNotFoundException otherwise
+     * Validates if the account has enough balace to transfer, throws NotEnoughBalanceException otherwise
+     * If validations succeed, transfers money from one account to the other.
+     * Also logs successful transactions.
+     * @param senderId
+     * @param receiverId
+     * @param transferAmount
+     * @throws AccountNotFoundException
+     * @throws NotEnoughBalanceException
+     * @throws IOException
+     */
     public void transfer(final int senderId,
                          final int receiverId,
-                         final int transferAmount) throws AccountNotFoundException, NotEnoughBalanceException {
+                         final int transferAmount) throws AccountNotFoundException, NotEnoughBalanceException, IOException {
         validator.validateAccountExists(senderId);
         validator.validateAccountExists(receiverId);
         validator.validateSufficientAccountBalance(senderId, transferAmount);
@@ -54,12 +72,26 @@ public class Handler {
         transactionDAO.recordTransaction(senderId, receiverId, transferAmount);
     }
 
+    /**
+     * Validates whether the accounts exist, throws AccountNotFoundException otherwise
+     * Retrieves balance for the given account id
+     * @param accountId
+     * @return
+     * @throws AccountNotFoundException
+     */
     public int retrieveBalance(final int accountId) throws AccountNotFoundException {
         validator.validateAccountExists(accountId);
 
-        return accountDAO.findById(accountId).getAmount();
+        return accountDAO.findById(accountId).getBalance();
     }
 
+    /**
+     * Validates whether the accounts exist, throws AccountNotFoundException otherwise
+     * Retrieves a list of transactions for the given account otherwise
+     * @param accountId
+     * @return
+     * @throws AccountNotFoundException
+     */
     public List<Transaction> retrieveTransferHistory(final int accountId) throws AccountNotFoundException {
         validator.validateAccountExists(accountId);
 

@@ -12,12 +12,11 @@ import com.ydalal.accounts.models.Transaction;
 import com.ydalal.accounts.validators.Validator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,18 +34,16 @@ public class HandlerTest {
     private static final int TRANSFER_AMOUNT = 200;
     private static final Account ACCOUNT = Account.builder()
             .id(ACCOUNT_ID)
-            .amount(INITIAL_AMOUNT)
+            .balance(INITIAL_AMOUNT)
             .build();
     private static final List<Transaction> TRANSACTIONS = ImmutableList.of(
             Transaction.builder()
                     .senderId(SENDER_ACCOUNT_ID)
                     .receiverId(RECEIVER_ACCOUNT_ID)
-                    .amount(TRANSFER_AMOUNT)
+                    .transferAmount(TRANSFER_AMOUNT)
                     .build()
     );
 
-    @Captor
-    ArgumentCaptor<Account> accountArgumentCaptor;
     @Mock
     Validator validator;
     @Mock
@@ -57,25 +54,22 @@ public class HandlerTest {
     Handler handler;
 
     @Test
-    public void createAccount_Success() throws CustomerNotFoundException {
+    public void createAccount_Success() throws CustomerNotFoundException, IOException {
         handler.createAccount(CUSTOMER_ID, INITIAL_AMOUNT);
 
         verify(validator).validateCustomerExists(CUSTOMER_ID);
-        verify(accountDAO).createAccount(accountArgumentCaptor.capture());
-        Account account = accountArgumentCaptor.getValue();
-        assertThat(account.getAmount()).isEqualTo(INITIAL_AMOUNT);
-        assertThat(account.getCustomerId()).isEqualTo(CUSTOMER_ID);
+        verify(accountDAO).createAccount(CUSTOMER_ID, INITIAL_AMOUNT);
     }
 
     @Test(expected = CustomerNotFoundException.class)
-    public void createAccount_CustomerNotFound() throws CustomerNotFoundException {
+    public void createAccount_CustomerNotFound() throws CustomerNotFoundException, IOException {
         doThrow(new CustomerNotFoundException()).when(validator).validateCustomerExists(CUSTOMER_ID);
 
         handler.createAccount(CUSTOMER_ID, INITIAL_AMOUNT);
     }
 
     @Test
-    public void transfer_Success() throws AccountNotFoundException, NotEnoughBalanceException {
+    public void transfer_Success() throws AccountNotFoundException, NotEnoughBalanceException, IOException {
         handler.transfer(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, TRANSFER_AMOUNT);
 
         verify(validator).validateAccountExists(SENDER_ACCOUNT_ID);
@@ -89,14 +83,14 @@ public class HandlerTest {
     }
 
     @Test(expected = AccountNotFoundException.class)
-    public void transfer_SenderAccountDoesNotExist() throws AccountNotFoundException, NotEnoughBalanceException {
+    public void transfer_SenderAccountDoesNotExist() throws AccountNotFoundException, NotEnoughBalanceException, IOException {
         doThrow(new AccountNotFoundException()).when(validator).validateAccountExists(SENDER_ACCOUNT_ID);
 
         handler.transfer(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, TRANSFER_AMOUNT);
     }
 
     @Test(expected = AccountNotFoundException.class)
-    public void transfer_ReceiverAccountDoesNotExist() throws AccountNotFoundException, NotEnoughBalanceException {
+    public void transfer_ReceiverAccountDoesNotExist() throws AccountNotFoundException, NotEnoughBalanceException, IOException {
         doThrow(new AccountNotFoundException()).when(validator).validateAccountExists(RECEIVER_ACCOUNT_ID);
 
         handler.transfer(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, TRANSFER_AMOUNT);
@@ -104,7 +98,7 @@ public class HandlerTest {
     }
 
     @Test(expected = NotEnoughBalanceException.class)
-    public void transfer_SenderHasInsufficientBalance() throws NotEnoughBalanceException, AccountNotFoundException {
+    public void transfer_SenderHasInsufficientBalance() throws NotEnoughBalanceException, AccountNotFoundException, IOException {
         doThrow(new NotEnoughBalanceException()).when(validator).validateSufficientAccountBalance(SENDER_ACCOUNT_ID, TRANSFER_AMOUNT);
 
         handler.transfer(SENDER_ACCOUNT_ID, RECEIVER_ACCOUNT_ID, TRANSFER_AMOUNT);
