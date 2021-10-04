@@ -1,6 +1,7 @@
-package com.ydalal.accounts;
+package com.ydalal.accounts.module;
 
 import com.google.inject.AbstractModule;
+import com.ydalal.accounts.id.AccountIdGenerator;
 import com.ydalal.accounts.db.AccountDAO;
 import com.ydalal.accounts.db.CustomerDAO;
 import com.ydalal.accounts.db.JsonAccountDAO;

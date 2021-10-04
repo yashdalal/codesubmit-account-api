@@ -1,3 +1,61 @@
+###Setup
+Git clone this project and install maven if you haven’t already using
+```
+brew install mvn
+```
+cd into the project folder 
+```
+cd java-any-uknppc/account-manager
+```
+
+Run the following command so that maven can run the unit tests, pull down all the dependencies, and compile the java project.
+```
+mvn package
+```
+
+Run the server
+```
+mvn exec:java -Dexec.mainClass="com.ydalal.accounts.App" -e
+```
+
+In a new tab, run the following `curl` commands to hit the server. Due to time constraints I did not implement accepting query params or a JSON request body for POST requests. If you would like to test the server against different inputs, you can update the App.java file, and rerun the package using the `mvn package` and `mvn exec:java -Dexec.mainClass="com.ydalal.accounts.App" -e`.
+
+Create a new account.
+```
+curl -v -X POST localhost:8000/account/create 
+```
+Create a new account.
+```
+curl -v -X POST localhost:8000/account/create 
+```
+Transfer money from one account to another
+```
+curl -v -X POST localhost:8000/account/transfer 
+```
+Get current account balance
+```
+curl -v -X GET localhost:8000/account/balance 
+```
+Get current account transactions
+```
+curl -v -X GET localhost:8000/account/transactions 
+```
+
+The customers.json is required. The accounts.json and transactions.json files can be updated to test different scenarios.
+
+####Extras:
+* Dependency injection using guice
+* Lombok to reduce boilerplate code
+* AssertJ for more english readable tests
+
+####Future improvements:
+* Rather than throwing an IOException, it would be good to give the user a descriptive message with the chance to correct their input.
+* FindBugs
+* Checkstyle
+* Logging using Log4J2
+* For simplicity, account id generator is sequential and only generated integers. In a real production environment it would be better to generate a random string as id.
+-----
+
 ### Objective
 
 Your assignment is to build an internal API for a fake financial institution using Java and any framework.
