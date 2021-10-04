@@ -46,6 +46,7 @@ The customers.json is required. The accounts.json and transactions.json files ca
 * AssertJ for more english readable tests
 
 #### Future improvements:
+* To keep things simple when looking for transactions for a given customer id, I'm just checking if the id matches the input account id. However in real database, we would keep the structure similar to what it is right now which creating a foreign key relationship between the account id and the transaction, allowing us to join to more efficiently get the transactions for a given account.
 * Rather than throwing an IOException, it would be good to give the user a descriptive message with the chance to correct their input.
 * FindBugs
 * Checkstyle
