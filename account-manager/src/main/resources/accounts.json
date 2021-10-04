@@ -1,0 +1,25 @@
+[ {
+  "id" : 0,
+  "customerId" : 2,
+  "balance" : 1000
+}, {
+  "id" : 1,
+  "customerId" : 2,
+  "balance" : 3050
+}, {
+  "id" : 2,
+  "customerId" : 23,
+  "balance" : 0
+}, {
+  "id" : 3,
+  "customerId" : 4,
+  "balance" : 4000
+}, {
+  "id" : 4,
+  "customerId" : 4,
+  "balance" : 3950
+}, {
+  "id" : 0,
+  "customerId" : 4,
+  "balance" : 4000
+} ]

@@ -1,0 +1,17 @@
+[ {
+  "senderId" : 2,
+  "receiverId" : 1,
+  "transferAmount" : 500
+}, {
+  "senderId" : 2,
+  "receiverId" : 3,
+  "transferAmount" : 5020
+}, {
+  "senderId" : 2,
+  "receiverId" : 4,
+  "transferAmount" : 5010
+}, {
+  "senderId" : 4,
+  "receiverId" : 1,
+  "transferAmount" : 50
+} ]
