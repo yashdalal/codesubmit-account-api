@@ -25,10 +25,6 @@ Create a new account.
 ```
 curl -v -X POST localhost:8000/account/create 
 ```
-Create a new account.
-```
-curl -v -X POST localhost:8000/account/create 
-```
 Transfer money from one account to another
 ```
 curl -v -X POST localhost:8000/account/transfer 
