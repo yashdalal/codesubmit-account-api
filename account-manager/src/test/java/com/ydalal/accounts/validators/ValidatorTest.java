@@ -26,11 +26,11 @@ public class ValidatorTest {
     private static final Account NULL_ACCOUNT = null;
     private static final Account ACCOUNT = Account.builder()
             .id(ACCOUNT_ID)
-            .amount(SUFFICIENT_BALANCE)
+            .balance(SUFFICIENT_BALANCE)
             .build();
     private static final Account INSUFFICIENT_ACCOUNT = Account.builder()
             .id(ACCOUNT_ID)
-            .amount(INSUFFICIENT_BALANCE)
+            .balance(INSUFFICIENT_BALANCE)
             .build();
     private static final int TRANSFER_AMOUNT = 100;
 

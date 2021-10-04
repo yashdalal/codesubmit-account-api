@@ -1,5 +1,6 @@
 package com.ydalal.accounts.validators;
 
+import com.google.inject.Inject;
 import com.ydalal.accounts.db.AccountDAO;
 import com.ydalal.accounts.db.CustomerDAO;
 import com.ydalal.accounts.exceptions.AccountNotFoundException;
@@ -12,6 +13,7 @@ public class Validator {
     private final CustomerDAO customerDAO;
     private final AccountDAO accountDAO;
 
+    @Inject
     public Validator(final CustomerDAO customerDAO,
                      final AccountDAO accountDAO) {
         this.customerDAO = customerDAO;
@@ -38,7 +40,9 @@ public class Validator {
                                                  final int transferAmount) throws NotEnoughBalanceException {
         Account account = accountDAO.findById(accountId);
 
-        if (account.getAmount() < transferAmount) {
+        if (account.getBalance() < transferAmount) {
+            System.out.printf("Account %d does not have sufficient funds" +
+                    " to transfer %d%n", accountId, transferAmount);
             throw new NotEnoughBalanceException(String.format("Account %d does not have sufficient funds" +
                     "to transfer %d", accountId, transferAmount));
         }
