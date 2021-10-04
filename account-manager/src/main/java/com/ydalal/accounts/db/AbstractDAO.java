@@ -9,12 +9,16 @@ import com.ydalal.accounts.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class DAO {
+/**
+ * Abstract base class to pull out reusable logic and entities such as ObjectMapper,
+ * ObjectWriter
+ */
+public abstract class AbstractDAO {
     final File file;
     public static final ObjectMapper mapper = new ObjectMapper();
     public static final ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 
-    DAO() throws IOException {
+    AbstractDAO() throws IOException {
         mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
         this.file = new File(getPath());
         initialize();
