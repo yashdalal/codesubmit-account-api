@@ -1,4 +1,5 @@
-###Setup
+### Setup
+
 Git clone this project and install maven if you haven’t already using
 ```
 brew install mvn
